@@ -5,17 +5,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.provider.Contacts;
+import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.WindowManager;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -37,12 +37,14 @@ public class MainActivity extends Activity implements RecognitionListener {
     private ArrayAdapter<String> adapter;
     private ListView list;
     private TextToSpeech textToSpeechSystem;
+    private int sPoints=3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
+
         list = (ListView) findViewById(R.id.ListStrait);
         listItems = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, listItems);
@@ -58,7 +60,39 @@ public class MainActivity extends Activity implements RecognitionListener {
                 }
             }
         });
-        startVoiceR();
+
+        EditText et= (EditText)findViewById(R.id.maxStr);
+        et.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                ((EditText)view).setText("");
+
+            }
+    });
+
+        Button button= (Button)findViewById(R.id.bStart);
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                try
+                {
+                    EditText et= findViewById(R.id.maxStr);
+                    sPoints = Integer.valueOf(et.getText().toString());
+                }
+                catch (Exception e)
+                {
+                    sPoints=3;
+                }
+                T2s(("Set sequence to " + String.valueOf(sPoints).toString()));
+
+                T2s("Starting ");
+                startVoiceR();
+            }
+        });
+
+
+
+
 
 
     }
@@ -258,6 +292,7 @@ public class MainActivity extends Activity implements RecognitionListener {
         if (StrairtShots>0)
         {
             addTolist(StrairtShots);
+            if (StrairtShots==sPoints) T2s("You Have reach your sequence ");
             StrairtShots=0;
         }
         TotalShots++;
@@ -281,7 +316,8 @@ public class MainActivity extends Activity implements RecognitionListener {
 
     private void T2s(String t)
     {
-        textToSpeechSystem.speak(t, TextToSpeech.QUEUE_FLUSH, null);
+
+        textToSpeechSystem.speak(t, TextToSpeech.QUEUE_ADD, null);
     }
     private void addTolist(int ps)
     {

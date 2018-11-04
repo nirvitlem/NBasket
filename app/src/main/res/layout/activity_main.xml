@@ -103,4 +103,28 @@
         android:layout_marginBottom="0dp"
         android:layout_toStartOf="@+id/textView" />
 
+    <Button
+        android:id="@+id/bStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="-38dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="45dp"
+        android:text="התחל" />
+
+    <EditText
+        android:id="@+id/maxStr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/bStart"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="קבע את מספר הרצף" />
+
 </RelativeLayout>
