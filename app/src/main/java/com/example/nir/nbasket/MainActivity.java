@@ -273,6 +273,7 @@ public class MainActivity extends Activity implements RecognitionListener {
         InShots++;
         StrairtShots++;
         TotalShots++;
+        if (StrairtShots==sPoints) T2s("You Have reach your sequence ") ;
         addtoPres();
         updateallText();
         Log.i("addtoIn ",String.valueOf(InShots));
@@ -292,7 +293,7 @@ public class MainActivity extends Activity implements RecognitionListener {
         if (StrairtShots>0)
         {
             addTolist(StrairtShots);
-            if (StrairtShots==sPoints) T2s("You Have reach your sequence ");
+            T2s("You Have reach sequence of " + String.valueOf(StrairtShots).toString());
             StrairtShots=0;
         }
         TotalShots++;
