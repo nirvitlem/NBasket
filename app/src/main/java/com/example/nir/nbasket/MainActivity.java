@@ -106,24 +106,42 @@ public class MainActivity extends Activity implements RecognitionListener {
             Log.i("startVoiceR", "startVoiceR");
 
             if (speech!=null) {
-                speech.stopListening();
+                //speech.stopListening();
                 speech.destroy();
+                recognizerIntent=null;
+                speech = SpeechRecognizer.createSpeechRecognizer(this);
+                speech.setRecognitionListener(this);
+
+                recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+                recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en");
+
+                recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getPackageName());
+
+                //recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.EXTRA_LANGUAGE);//.LANGUAGE_MODEL_WEB_SEARCH);
+                recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+                speech.startListening(recognizerIntent);
+                Log.i("startVoiceR", "speech!=null");
             }
-            recognizerIntent=null;
-            speech = SpeechRecognizer.createSpeechRecognizer(this);
-            Log.i("startVoiceR", "speech==null");
-            speech.setRecognitionListener(this);
+            else
+            {
+                speech = SpeechRecognizer.createSpeechRecognizer(this);
+                speech.setRecognitionListener(this);
+
+                recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+                recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en");
+
+                recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getPackageName());
+
+                //recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.EXTRA_LANGUAGE);//.LANGUAGE_MODEL_WEB_SEARCH);
+                recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+                speech.startListening(recognizerIntent);
+                Log.i("startVoiceR", "speech==null");
+            }
 
 
-            recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 
-            recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en");
-
-            recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getPackageName());
-
-            //recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.EXTRA_LANGUAGE);//.LANGUAGE_MODEL_WEB_SEARCH);
-            recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
-            speech.startListening(recognizerIntent);
         }
         catch(Exception e)
         {
@@ -247,7 +265,7 @@ public class MainActivity extends Activity implements RecognitionListener {
 
                 break;
         }
-        Log.i("OnError",String.valueOf(errorCode));
+       // Log.i("OnError",String.valueOf(errorCode));
         //speech.startListening(recognizerIntent);
     }
 
