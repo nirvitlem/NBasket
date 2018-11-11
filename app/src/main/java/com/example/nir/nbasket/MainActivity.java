@@ -74,6 +74,7 @@ public class MainActivity extends Activity implements RecognitionListener {
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                clearText();
                 try
                 {
                     EditText et= findViewById(R.id.maxStr);
@@ -86,6 +87,7 @@ public class MainActivity extends Activity implements RecognitionListener {
                 T2s(("Set sequence to " + String.valueOf(sPoints).toString()));
 
                 T2s("Starting ");
+
                 startVoiceR();
             }
         });
@@ -332,6 +334,15 @@ public class MainActivity extends Activity implements RecognitionListener {
         addtoPres();
         updateallText();
         T2s("OK");
+    }
+
+    private void clearText()
+    {
+        OutShots=0;
+        TotalShots=0;
+        InShots=0;
+        PresShots=0;
+        adapter.clear();
     }
 
     private void updateallText()
