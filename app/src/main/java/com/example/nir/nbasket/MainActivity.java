@@ -26,8 +26,8 @@ import java.util.Locale;
 
 public class MainActivity extends Activity implements RecognitionListener {
     public final int MY_PERMISSIONS_REQUEST=1;
-    private static Intent recognizerIntent;
-    private  static SpeechRecognizer speech;
+    private  Intent recognizerIntent;
+    private   SpeechRecognizer speech;
     private double TotalShots=0;
     private double InShots=0;
     private double OutShots=0;
@@ -100,21 +100,32 @@ public class MainActivity extends Activity implements RecognitionListener {
 
     private void startVoiceR()
     {
-        if (speech==null) {
+        try {
+            Log.i("startVoiceR", "startVoiceR");
+
+            if (speech!=null) {
+                speech.stopListening();
+                speech.destroy();
+            }
+            recognizerIntent=null;
             speech = SpeechRecognizer.createSpeechRecognizer(this);
-
+            Log.i("startVoiceR", "speech==null");
             speech.setRecognitionListener(this);
+
+
+            recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+            recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en");
+
+            recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getPackageName());
+
+            //recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.EXTRA_LANGUAGE);//.LANGUAGE_MODEL_WEB_SEARCH);
+            recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+            speech.startListening(recognizerIntent);
         }
-
-        recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE,"en");
-
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,this.getPackageName());
-
-        //recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.EXTRA_LANGUAGE);//.LANGUAGE_MODEL_WEB_SEARCH);
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
-        speech.startListening(recognizerIntent);
+        catch(Exception e)
+        {
+            Log.i("startVoiceR",e.getMessage());        }
     }
 
     @Override
@@ -145,6 +156,7 @@ public class MainActivity extends Activity implements RecognitionListener {
 
     public void onBeginningOfSpeech() {
         Log.i("onBeginningOfSpeech","onBeginningOfSpeech");
+       // startVoiceR();
     }
 
     @Override
@@ -156,7 +168,8 @@ public class MainActivity extends Activity implements RecognitionListener {
     @Override
 
     public void onEndOfSpeech() {
-        speech.destroy();
+        Log.i("onEndOfSpeech","onEndOfSpeech");
+        //speech.destroy();
         startVoiceR();
     }
 
@@ -169,7 +182,7 @@ public class MainActivity extends Activity implements RecognitionListener {
             case SpeechRecognizer.ERROR_AUDIO:
 
                 Log.i("message = R.string.error_audio_error","ERROR_AUDIO");
-                speech.destroy();
+                //speech.destroy();
                 startVoiceR();
                 break;
 
@@ -194,14 +207,14 @@ public class MainActivity extends Activity implements RecognitionListener {
             case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
 
                 Log.i("message = R.string.error_timeout", "ERROR_NETWORK_TIMEOUT");
-                speech.destroy();
+                //speech.destroy();
                 startVoiceR();
                 break;
 
             case SpeechRecognizer.ERROR_NO_MATCH:
 
                 Log.i("message = R.string.error_no_match","ERROR_NO_MATCH");
-                speech.destroy();
+               // speech.destroy();
                 startVoiceR();
                 break;
 
@@ -215,14 +228,14 @@ public class MainActivity extends Activity implements RecognitionListener {
             case SpeechRecognizer.ERROR_SERVER:
 
                 Log.i("message = R.string.error_server","ERROR_SERVER");
-                speech.destroy();
+                //speech.destroy();
                 startVoiceR();
                 break;
 
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
 
                 Log.i("message = R.string.error_timeout","ERROR_SPEECH_TIMEOUT");
-                speech.destroy();
+                //speech.destroy();
                 startVoiceR();
                 break;
 
@@ -232,9 +245,26 @@ public class MainActivity extends Activity implements RecognitionListener {
 
                 break;
         }
-        //Log.i("OnError",String.valueOf(errorCode));
-
+        Log.i("OnError",String.valueOf(errorCode));
+        //speech.startListening(recognizerIntent);
     }
+
+    @Override
+    protected void onPause() {
+
+        Log.i("onPause", "on pause called");
+      /*  if (speech != null) {
+            speech.stopListening();
+            speech.cancel();
+            speech.destroy();
+
+        }
+        //speech = null;*/
+        //startVoiceR();
+        super.onPause();
+    }
+
+
     @Override
 
     public void onEvent(int arg0, Bundle arg1) {
@@ -247,7 +277,7 @@ public class MainActivity extends Activity implements RecognitionListener {
 
         Log.i("onPartialResults ", "onPartialResults");
         //speech.destroy();
-        //startVoiceR();
+        startVoiceR();
     }
 
     @Override
@@ -255,7 +285,7 @@ public class MainActivity extends Activity implements RecognitionListener {
     public void onReadyForSpeech(Bundle arg0) {
         Log.i("onReadyForSpeech ", "onReadyForSpeech");
         //speech.destroy();
-        startVoiceR();
+        //startVoiceR();
 
     }
 
@@ -268,7 +298,7 @@ public class MainActivity extends Activity implements RecognitionListener {
         Log.i("Result ", matches.get(0));
         if((matches.get(0).contains("NO") || (matches.get(0).contains("no")))) addtoOut();
         if((matches.get(0).contains("YES") || (matches.get(0).contains("yes")|| (matches.get(0).contains("ye")))))  addtoIn();
-        speech.destroy();
+        //speech.destroy();
         startVoiceR();
     }
     private void addtoIn() {
