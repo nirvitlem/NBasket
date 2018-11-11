@@ -26,8 +26,8 @@ import java.util.Locale;
 
 public class MainActivity extends Activity implements RecognitionListener {
     public final int MY_PERMISSIONS_REQUEST=1;
-    private Intent recognizerIntent;
-    private  SpeechRecognizer speech;
+    private static Intent recognizerIntent;
+    private  static SpeechRecognizer speech;
     private double TotalShots=0;
     private double InShots=0;
     private double OutShots=0;
@@ -100,9 +100,11 @@ public class MainActivity extends Activity implements RecognitionListener {
 
     private void startVoiceR()
     {
-        speech = SpeechRecognizer.createSpeechRecognizer(this);
+        if (speech==null) {
+            speech = SpeechRecognizer.createSpeechRecognizer(this);
 
-        speech.setRecognitionListener(this);
+            speech.setRecognitionListener(this);
+        }
 
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 
@@ -323,7 +325,7 @@ public class MainActivity extends Activity implements RecognitionListener {
     private void addTolist(int ps)
     {
         ListView lv = findViewById(R.id.ListStrait);
-        listItems.add(Calendar.getInstance().getTime() + " " + String.valueOf(ps));
+        listItems.add(String.format("HH:MM",Calendar.getInstance().getTime()) + " " + String.valueOf(ps));
         // next thing you have to do is check if your adapter has changed
         adapter.notifyDataSetChanged();
     }
@@ -334,9 +336,9 @@ public class MainActivity extends Activity implements RecognitionListener {
     }
     @Override
     public void onDestroy(){
+        super.onDestroy();
         speech.destroy();
         textToSpeechSystem.stop();
-        super.onDestroy();
     }
 
 }
