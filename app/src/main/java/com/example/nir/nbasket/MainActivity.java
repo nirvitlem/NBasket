@@ -20,14 +20,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 public class MainActivity extends Activity implements RecognitionListener {
     public final int MY_PERMISSIONS_REQUEST=1;
-    private  Intent recognizerIntent;
-    private   SpeechRecognizer speech;
+    private static  SpeechRecognizer speech;
     private double TotalShots=0;
     private double InShots=0;
     private double OutShots=0;
@@ -38,6 +38,8 @@ public class MainActivity extends Activity implements RecognitionListener {
     private ListView list;
     private TextToSpeech textToSpeechSystem;
     private int sPoints=3;
+    private  SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +110,7 @@ public class MainActivity extends Activity implements RecognitionListener {
             if (speech!=null) {
                 //speech.stopListening();
                 speech.destroy();
-                recognizerIntent=null;
+                Intent recognizerIntent =null;
                 speech = SpeechRecognizer.createSpeechRecognizer(this);
                 speech.setRecognitionListener(this);
 
@@ -128,7 +130,7 @@ public class MainActivity extends Activity implements RecognitionListener {
                 speech = SpeechRecognizer.createSpeechRecognizer(this);
                 speech.setRecognitionListener(this);
 
-                recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                Intent recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 
                 recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en");
 
@@ -190,7 +192,7 @@ public class MainActivity extends Activity implements RecognitionListener {
     public void onEndOfSpeech() {
         Log.i("onEndOfSpeech","onEndOfSpeech");
         //speech.destroy();
-        startVoiceR();
+        //startVoiceR();
     }
 
     @Override
@@ -311,7 +313,6 @@ public class MainActivity extends Activity implements RecognitionListener {
     }
 
     @Override
-
     public void onResults(Bundle results) {
 
         ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
@@ -322,6 +323,7 @@ public class MainActivity extends Activity implements RecognitionListener {
         //speech.destroy();
         startVoiceR();
     }
+
     private void addtoIn() {
         InShots++;
         StrairtShots++;
@@ -385,7 +387,7 @@ public class MainActivity extends Activity implements RecognitionListener {
     private void addTolist(int ps)
     {
         ListView lv = findViewById(R.id.ListStrait);
-        listItems.add(String.format("HH:MM",Calendar.getInstance().getTime()) + " " + String.valueOf(ps));
+        listItems.add(format.format(Calendar.getInstance().getTime()) + " SIAR - " + String.valueOf(ps));
         // next thing you have to do is check if your adapter has changed
         adapter.notifyDataSetChanged();
     }
