@@ -364,6 +364,7 @@ public class MainActivity extends Activity implements RecognitionListener {
         InShots=0;
         PresShots=0;
         adapter.clear();
+        updateallText();
     }
 
     private void updateallText()
