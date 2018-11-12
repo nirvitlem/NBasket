@@ -269,7 +269,7 @@ public class MainActivity extends Activity implements RecognitionListener {
         //speech.startListening(recognizerIntent);
     }
 
-    @Override
+  /*  @Override
     protected void onPause() {
 
         Log.i("onPause", "on pause called");
@@ -281,8 +281,9 @@ public class MainActivity extends Activity implements RecognitionListener {
         }
         //speech = null;*/
         //startVoiceR();
-        super.onPause();
-    }
+     /*   super.onPause();
+    }*/
+
 
 
     @Override
